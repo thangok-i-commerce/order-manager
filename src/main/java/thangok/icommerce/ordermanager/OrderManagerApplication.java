@@ -2,10 +2,12 @@ package thangok.icommerce.ordermanager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
+import org.springframework.web.reactive.config.EnableWebFlux;
 
 @SpringBootApplication
-@EnableJpaRepositories
+@EnableWebFlux
+@EnableR2dbcRepositories
 public class OrderManagerApplication {
 
 	public static void main(String[] args) {
