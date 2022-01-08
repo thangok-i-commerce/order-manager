@@ -1,13 +1,30 @@
 package thangok.icommerce.ordermanager.security;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.server.SecurityWebFilterChain;
 
-@Configuration
-public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/**");
+@EnableWebFluxSecurity
+public class ApplicationSecurity {
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+        http.authorizeExchange()
+                .pathMatchers("/home/user").hasAnyRole("USER", "ADMIN")
+                .pathMatchers("/home/admin").hasRole("ADMIN")
+                .anyExchange()
+                .authenticated()
+                .and()
+                .formLogin();
+        return http.build();
+    }
+
 }
