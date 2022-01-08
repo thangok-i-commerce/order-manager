@@ -18,12 +18,16 @@ public class ApplicationSecurity {
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http.authorizeExchange()
+                .pathMatchers("/**").permitAll()
                 .pathMatchers("/home/user").hasAnyRole("USER", "ADMIN")
                 .pathMatchers("/home/admin").hasRole("ADMIN")
                 .anyExchange()
                 .authenticated()
                 .and()
                 .formLogin();
+
+        http.csrf(csrf -> csrf.disable());
+
         return http.build();
     }
 
