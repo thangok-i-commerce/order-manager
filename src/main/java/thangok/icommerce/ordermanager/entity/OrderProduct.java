@@ -19,10 +19,10 @@ public class OrderProduct implements Serializable {
     @GeneratedValue
     private UUID id;
 
-    @Column(name = "order_id")
+    @Column(name = "order_id", nullable = false)
     private UUID orderId;
 
-    @Column(name = "product_id")
+    @Column(name = "product_id", nullable = false)
     private Long productId;
 
     @Column(name = "count")

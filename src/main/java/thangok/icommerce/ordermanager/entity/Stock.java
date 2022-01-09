@@ -18,7 +18,7 @@ public class Stock implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "product_id", unique = true)
+    @Column(name = "product_id", nullable = false, unique = true)
     private Long productId;
 
     @Column(name = "stock_count")

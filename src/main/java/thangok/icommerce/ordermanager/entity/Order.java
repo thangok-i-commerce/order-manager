@@ -21,7 +21,7 @@ public class Order implements Serializable {
     @GeneratedValue
     private UUID id;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private UUID userId;
 
     @Column(name = "order_status")
