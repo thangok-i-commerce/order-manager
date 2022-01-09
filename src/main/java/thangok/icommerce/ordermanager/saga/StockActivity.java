@@ -3,7 +3,7 @@ package thangok.icommerce.ordermanager.saga;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import thangok.icommerce.ordermanager.external.dto.StockModifyDTO;
+import thangok.icommerce.ordermanager.external.dto.StockRequestDTO;
 import thangok.icommerce.ordermanager.external.dto.StockResponseDTO;
 
 public class StockActivity implements Activity {
@@ -13,11 +13,11 @@ public class StockActivity implements Activity {
 
     WebClient webClient;
 
-    StockModifyDTO requestDTO;
+    StockRequestDTO requestDTO;
 
     ActivityStatus activityStatus = ActivityStatus.PENDING;
 
-    public StockActivity(WebClient webClient, StockModifyDTO requestDTO) {
+    public StockActivity(WebClient webClient, StockRequestDTO requestDTO) {
         this.webClient = webClient;
         this.requestDTO = requestDTO;
     }
@@ -30,7 +30,7 @@ public class StockActivity implements Activity {
                 .body(BodyInserters.fromValue(this.requestDTO))
                 .retrieve()
                 .bodyToMono(StockResponseDTO.class)
-                .map(x -> x.getRemainQuantity() >= 0)
+                .map(StockResponseDTO::getIsSuccess)
                 .doOnNext(x -> this.activityStatus = x ? ActivityStatus.SUCCESS : ActivityStatus.FAIL);
     }
 

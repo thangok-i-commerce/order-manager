@@ -11,12 +11,10 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class StockResponseDTO implements Serializable {
+public class StockRequestDTO implements Serializable {
 
     private UUID orderId;
 
     private List<StockModifyDTO> stockModifyList;
-
-    private Boolean isSuccess;
 
 }
