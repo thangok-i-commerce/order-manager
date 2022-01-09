@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 import thangok.icommerce.ordermanager.dto.OrderDTO;
 import thangok.icommerce.ordermanager.service.OrderService;
 
@@ -16,7 +17,7 @@ public class OrderController {
     OrderService orderService;
 
     @PostMapping("/")
-    public OrderDTO createOrder(@RequestBody final OrderDTO orderDTO) {
+    public Mono<OrderDTO> placeOrder(@RequestBody final OrderDTO orderDTO) {
         return orderService.placeOrder(orderDTO);
     }
 }

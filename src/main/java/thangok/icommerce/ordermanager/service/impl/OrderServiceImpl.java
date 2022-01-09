@@ -10,6 +10,7 @@ import thangok.icommerce.ordermanager.entity.Order;
 import thangok.icommerce.ordermanager.entity.OrderProduct;
 import thangok.icommerce.ordermanager.enumerable.OrderStatus;
 import thangok.icommerce.ordermanager.repository.OrderRepository;
+import thangok.icommerce.ordermanager.saga.OrderOrchestrator;
 import thangok.icommerce.ordermanager.service.OrderService;
 
 import java.util.ArrayList;
@@ -20,6 +21,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     OrderRepository orderRepository;
+
+    @Autowired
+    OrderOrchestrator orderOrchestrator;
 
     @Override
     public Mono<OrderDTO> getOrderById(UUID orderId) {
@@ -32,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDTO placeOrder(OrderDTO orderDTO) {
+    public Mono<OrderDTO> placeOrder(OrderDTO orderDTO) {
         final Order order = new Order();
 
         order.setUserId(orderDTO.getUserId());
@@ -65,6 +69,7 @@ public class OrderServiceImpl implements OrderService {
             return orderProductDTO;
         }).forEach(result.getProductList()::add);
 
-        return result;
+        // Saga Orchestrator
+        return orderOrchestrator.placeOrder(result);
     }
 }
