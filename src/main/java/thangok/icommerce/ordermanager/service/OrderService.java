@@ -12,4 +12,6 @@ public interface OrderService {
 
     Flux<OrderDTO> getOrderByUser(UUID userId);
 
+    Mono<OrderDTO> placeOrder(OrderDTO orderDTO);
+
 }

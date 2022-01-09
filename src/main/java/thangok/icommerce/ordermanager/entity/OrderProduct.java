@@ -20,7 +20,7 @@ public class OrderProduct implements Serializable {
     private UUID id;
 
     @Column(name = "order_id", nullable = false)
-    private UUID orderId;
+    private Order order;
 
     @Column(name = "product_id", nullable = false)
     private Long productId;
