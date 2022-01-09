@@ -35,7 +35,13 @@ public class PaymentActivity implements Activity {
                 .retrieve()
                 .bodyToMono(PaymentResponseDTO.class)
                 .map(PaymentResponseDTO::getIsSuccess)
-                .doOnNext(x -> this.activityStatus = ActivityStatus.SUCCESS);
+                .doOnNext(x -> {
+                    if (x) {
+                        this.activityStatus = ActivityStatus.SUCCESS;
+                    } else {
+                        this.activityStatus = ActivityStatus.FAIL;
+                    }
+                });
     }
 
     @LogIO
