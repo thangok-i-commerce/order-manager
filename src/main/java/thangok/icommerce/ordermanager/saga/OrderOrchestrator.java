@@ -57,6 +57,7 @@ public class OrderOrchestrator {
         return this.perform(flow, orderDTO).onErrorResume(ex -> this.rollback(flow, orderDTO));
     }
 
+    @LogIO
     private Mono<OrderDTO> perform(final List<Activity> flow, final OrderDTO orderDTO) {
         return Flux.fromStream(flow::stream)
                 .flatMap(Activity::perform)
@@ -73,6 +74,7 @@ public class OrderOrchestrator {
                 }));
     }
 
+    @LogIO
     private Mono<OrderDTO> rollback(final List<Activity> flow, final OrderDTO orderDTO) {
         return Flux.fromStream(flow::stream)
                 .filter(wf -> wf.getStatus().equals(ActivityStatus.SUCCESS))

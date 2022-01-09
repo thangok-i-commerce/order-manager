@@ -3,6 +3,7 @@ package thangok.icommerce.ordermanager.saga;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import thangok.icommerce.ordermanager.aop.io.LogIO;
 import thangok.icommerce.ordermanager.external.dto.StockRequestDTO;
 import thangok.icommerce.ordermanager.external.dto.StockResponseDTO;
 
@@ -22,6 +23,7 @@ public class StockActivity implements Activity {
         this.requestDTO = requestDTO;
     }
 
+    @LogIO
     @Override
     public Mono<Boolean> perform() {
         return this.webClient
@@ -34,6 +36,7 @@ public class StockActivity implements Activity {
                 .doOnNext(x -> this.activityStatus = x ? ActivityStatus.SUCCESS : ActivityStatus.FAIL);
     }
 
+    @LogIO
     @Override
     public Mono<Boolean> rollback() {
         return this.webClient
@@ -46,6 +49,7 @@ public class StockActivity implements Activity {
                 .onErrorReturn(false);
     }
 
+    @LogIO
     @Override
     public ActivityStatus getStatus() {
         return this.activityStatus;
