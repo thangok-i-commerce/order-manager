@@ -15,13 +15,17 @@ public class StockController {
     @LogIO
     @PostMapping("/export")
     public StockResponseDTO exportStock(@RequestBody final StockRequestDTO stockRequestDTO) {
-        return new StockResponseDTO();
+        StockResponseDTO result = new StockResponseDTO();
+        result.setIsSuccess(true);
+        return result;
     }
 
     @LogIO
     @PostMapping("/import")
     public StockResponseDTO importStock(@RequestBody final StockRequestDTO stockRequestDTO) {
-        return new StockResponseDTO();
+        StockResponseDTO result = new StockResponseDTO();
+        result.setIsSuccess(true);
+        return result;
     }
 
 }

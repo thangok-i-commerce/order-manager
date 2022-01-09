@@ -1,5 +1,6 @@
 package thangok.icommerce.ordermanager.saga;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -7,6 +8,7 @@ import thangok.icommerce.ordermanager.aop.io.LogIO;
 import thangok.icommerce.ordermanager.external.dto.StockRequestDTO;
 import thangok.icommerce.ordermanager.external.dto.StockResponseDTO;
 
+@Slf4j
 public class StockActivity implements Activity {
 
     String stockExportEndpoint = "/export";
@@ -16,7 +18,7 @@ public class StockActivity implements Activity {
 
     StockRequestDTO requestDTO;
 
-    ActivityStatus activityStatus = ActivityStatus.PENDING;
+    private ActivityStatus activityStatus = ActivityStatus.PENDING;
 
     public StockActivity(WebClient webClient, StockRequestDTO requestDTO) {
         this.webClient = webClient;
@@ -33,12 +35,13 @@ public class StockActivity implements Activity {
                 .retrieve()
                 .bodyToMono(StockResponseDTO.class)
                 .map(StockResponseDTO::getIsSuccess)
-                .doOnNext(x -> this.activityStatus = x ? ActivityStatus.SUCCESS : ActivityStatus.FAIL);
+                .doOnNext(x -> this.activityStatus = ActivityStatus.SUCCESS);
     }
 
     @LogIO
     @Override
     public Mono<Boolean> rollback() {
+        log.info("perform rollback");
         return this.webClient
                 .post()
                 .uri(stockImportEndpoint)

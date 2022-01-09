@@ -15,13 +15,17 @@ public class PaymentController {
     @LogIO
     @PostMapping("/purchase")
     public PaymentResponseDTO purchase(@RequestBody final PaymentRequestDTO paymentRequestDTO) {
-        return new PaymentResponseDTO();
+        PaymentResponseDTO result = new PaymentResponseDTO();
+        result.setIsSuccess(false);
+        return result;
     }
 
     @LogIO
     @PostMapping("/refund")
     public PaymentResponseDTO refund(@RequestBody final PaymentRequestDTO paymentRequestDTO) {
-        return new PaymentResponseDTO();
+        PaymentResponseDTO result = new PaymentResponseDTO();
+        result.setIsSuccess(true);
+        return result;
     }
 
 }

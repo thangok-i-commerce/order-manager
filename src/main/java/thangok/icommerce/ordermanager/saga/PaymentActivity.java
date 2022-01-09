@@ -1,5 +1,6 @@
 package thangok.icommerce.ordermanager.saga;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -7,6 +8,7 @@ import thangok.icommerce.ordermanager.aop.io.LogIO;
 import thangok.icommerce.ordermanager.external.dto.PaymentRequestDTO;
 import thangok.icommerce.ordermanager.external.dto.PaymentResponseDTO;
 
+@Slf4j
 public class PaymentActivity implements Activity {
 
     String paymentPurchaseEndpoint = "/purchase";
@@ -16,7 +18,7 @@ public class PaymentActivity implements Activity {
 
     PaymentRequestDTO requestDTO;
 
-    ActivityStatus activityStatus = ActivityStatus.PENDING;
+    private ActivityStatus activityStatus = ActivityStatus.PENDING;
 
     public PaymentActivity(WebClient webClient, PaymentRequestDTO requestDTO) {
         this.webClient = webClient;
@@ -33,12 +35,13 @@ public class PaymentActivity implements Activity {
                 .retrieve()
                 .bodyToMono(PaymentResponseDTO.class)
                 .map(PaymentResponseDTO::getIsSuccess)
-                .doOnNext(x -> this.activityStatus = x ? ActivityStatus.SUCCESS : ActivityStatus.FAIL);
+                .doOnNext(x -> this.activityStatus = ActivityStatus.SUCCESS);
     }
 
     @LogIO
     @Override
     public Mono<Boolean> rollback() {
+        log.info("perform rollback");
         return this.webClient
                 .post()
                 .uri(paymentRefundEndpoint)
