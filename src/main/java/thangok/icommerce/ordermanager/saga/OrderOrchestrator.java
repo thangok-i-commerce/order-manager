@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import thangok.icommerce.ordermanager.aop.io.LogIO;
 import thangok.icommerce.ordermanager.dto.OrderDTO;
 import thangok.icommerce.ordermanager.enumerable.OrderStatus;
 import thangok.icommerce.ordermanager.external.dto.PaymentRequestDTO;
@@ -28,6 +29,7 @@ public class OrderOrchestrator {
     @Qualifier("stock")
     private WebClient stockClient;
 
+    @LogIO
     public Mono<OrderDTO> placeOrder(final OrderDTO orderDTO) {
         final List<Activity> flow = new ArrayList<>();
 
