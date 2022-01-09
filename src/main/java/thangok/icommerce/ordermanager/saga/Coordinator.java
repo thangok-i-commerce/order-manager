@@ -14,20 +14,20 @@ public class Coordinator {
     @Bean("stock")
     public WebClient getStockClient() {
         return WebClient.builder()
-                .baseUrl("http://localhost:8082/api/stock")
+                .baseUrl("http://localhost:8083/api/stock")
                 .defaultCookie("cookieKey", "cookieValue")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultUriVariables(Collections.singletonMap("url", "http://localhost:8082/api/stock"))
+                .defaultUriVariables(Collections.singletonMap("url", "http://localhost:8083/api/stock"))
                 .build();
     }
 
     @Bean("payment")
     public WebClient getPaymentClient() {
         return WebClient.builder()
-                .baseUrl("http://localhost:8082/api/payment")
+                .baseUrl("http://localhost:8083/api/payment")
                 .defaultCookie("cookieKey", "cookieValue")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultUriVariables(Collections.singletonMap("url", "http://localhost:8082/api/payment"))
+                .defaultUriVariables(Collections.singletonMap("url", "http://localhost:8083/api/payment"))
                 .build();
     }
 }
