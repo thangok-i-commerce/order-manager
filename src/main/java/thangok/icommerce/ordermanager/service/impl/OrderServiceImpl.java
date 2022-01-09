@@ -10,16 +10,13 @@ import thangok.icommerce.ordermanager.entity.Order;
 import thangok.icommerce.ordermanager.entity.OrderProduct;
 import thangok.icommerce.ordermanager.enumerable.OrderStatus;
 import thangok.icommerce.ordermanager.repository.OrderRepository;
-import thangok.icommerce.ordermanager.repository.StockRepository;
 import thangok.icommerce.ordermanager.service.OrderService;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-
-    @Autowired
-    StockRepository stockRepository;
 
     @Autowired
     OrderRepository orderRepository;
@@ -35,11 +32,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Mono<OrderDTO> placeOrder(OrderDTO orderDTO) {
+    public OrderDTO placeOrder(OrderDTO orderDTO) {
         final Order order = new Order();
 
         order.setUserId(orderDTO.getUserId());
 
+        order.setProductList(new ArrayList<>());
         orderDTO.getProductList().stream().map(x -> {
             OrderProduct orderProduct = new OrderProduct();
             orderProduct.setProductId(x.getProductId());
@@ -50,22 +48,23 @@ public class OrderServiceImpl implements OrderService {
 
         order.setOrderStatus(OrderStatus.FULL_FILLED);
 
-        return orderRepository.save(order).map(x -> {
-            OrderDTO result = new OrderDTO();
+        Order persistedOrder = orderRepository.save(order);
 
-            result.setId(x.getId());
-            result.setUserId(x.getUserId());
-            result.setOrderStatus(x.getOrderStatus());
+        OrderDTO result = new OrderDTO();
 
-            x.getProductList().stream().map(y -> {
-                OrderProductDTO orderProductDTO = new OrderProductDTO();
-                orderProductDTO.setOrderId(y.getOrder().getId());
-                orderProductDTO.setProductId(y.getProductId());
-                orderProductDTO.setCount(y.getCount());
-                return orderProductDTO;
-            }).forEach(result.getProductList()::add);
+        result.setId(persistedOrder.getId());
+        result.setUserId(persistedOrder.getUserId());
+        result.setOrderStatus(persistedOrder.getOrderStatus());
 
-            return result;
-        });
+        result.setProductList(new ArrayList<>());
+        persistedOrder.getProductList().stream().map(y -> {
+            OrderProductDTO orderProductDTO = new OrderProductDTO();
+            orderProductDTO.setOrderId(y.getOrder().getId());
+            orderProductDTO.setProductId(y.getProductId());
+            orderProductDTO.setCount(y.getCount());
+            return orderProductDTO;
+        }).forEach(result.getProductList()::add);
+
+        return result;
     }
 }

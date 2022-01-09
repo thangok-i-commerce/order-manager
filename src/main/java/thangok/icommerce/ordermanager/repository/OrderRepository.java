@@ -1,15 +1,15 @@
 package thangok.icommerce.ordermanager.repository;
 
-import org.springframework.data.r2dbc.repository.R2dbcRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Mono;
 import thangok.icommerce.ordermanager.entity.Order;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface OrderRepository extends R2dbcRepository<Order, UUID> {
+public interface OrderRepository extends JpaRepository<Order, UUID> {
 
-    Mono<Order> findByUserId(UUID userId);
+    Optional<Order> findByUserId(UUID userId);
 
 }
